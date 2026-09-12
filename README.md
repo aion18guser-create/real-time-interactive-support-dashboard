@@ -20,65 +20,9 @@ Key project goals:
 
 ---
 
-## 2. System Architecture & Data Flow Diagram
+## 2. System Architecture 
 
 The project is split into two independent modules: a Node.js/Express backend server and a React.js (Vite) client frontend.
-
-### ASCII Architecture & Data Flow Diagram
-
-```
-+-------------------------------------------------------------+
-|                         BACKEND                             |
-|  [Node.js + Express Server] (Port: 5000)                    |
-|                                                             |
-|   +-------------------+       +-------------------------+   |
-|   |  GET /api/status  |       |   setInterval() Timer   |   |
-|   |  (Health Check)   |       |   (Every 4.5 seconds)   |   |
-|   +-------------------+       +------------+------------+   |
-|                                            |                |
-|                                            v                |
-|                               +-------------------------+   |
-|                               | Mock Ticket Generator   |   |
-|                               | (id, title, priority,   |   |
-|                               |  category, timestamp)   |   |
-|                               +------------+------------+   |
-|                                            |                |
-|                                            v                |
-|                               +-------------------------+   |
-|                               | Socket.io WebSocket Hub |   |
-|                               +------------+------------+   |
-+--------------------------------------------|----------------+
-                                             |
-                          WebSocket Protocol | io.emit('new_ticket')
-                                             | (Bi-directional / Event-based)
-                                             v
-+--------------------------------------------|----------------+
-|                         FRONTEND                            |
-|  [React.js Single Page App] (Vite Dev Server, Port: 3000)   |
-|                                                             |
-|   +-----------------------------------------------------+   |
-|   | socket.io-client (useEffect Hook)                   |   |
-|   | - Connects to http://localhost:5000                 |   |
-|   | - socket.on('new_ticket') -> setTickets()           |   |
-|   | - socket.off() cleanup on component unmount         |   |
-|   +--------------------------+--------------------------+   |
-|                              |                              |
-|                              v                              |
-|   +-----------------------------------------------------+   |
-|   | State & Filter Layer                                |   |
-|   | - Active Tickets State: Array of ticket objects     |   |
-|   | - Priority Filter State: 'All' | 'High' | 'Med' | 'Low' |
-|   | - Clear All Action: Reset state                     |   |
-|   +--------------------------+--------------------------+   |
-|                              |                              |
-|                              v                              |
-|   +-----------------------------------------------------+   |
-|   | UI Presentation Layer (App.css - Pure CSS Grid)     |   |
-|   | - Color-coded badges (Red = High, Yellow, Green)    |   |
-|   | - Real-time ticket counter & connection indicator   |   |
-|   +-----------------------------------------------------+   |
-+-------------------------------------------------------------+
-```
 
 ---
 
